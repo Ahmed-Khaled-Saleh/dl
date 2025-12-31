@@ -115,7 +115,7 @@ def predict(self: Trainer):
     avg_precision = precision_score(y_true, y_pred, average="macro",zero_division=0)
     avg_recall = recall_score(y_true, y_pred, average="macro",zero_division=0)
     avg_f1 = f1_score(y_true, y_pred, average="macro",zero_division=0)
-    avg_kappa = cohen_kappa_score(y_true, y_pred)
+    avg_kappa = -1#cohen_kappa_score(y_true, y_pred) # TODO: Check if kappa can be averaged across multi-label
     res['avg'] = {"f1_score": avg_f1, "accuracy": avg_acc, "precision": avg_precision, "recall": avg_recall, "cohen_kappa": avg_kappa}
 
     metrics_df = pd.DataFrame(res).T

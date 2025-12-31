@@ -1,4 +1,4 @@
-project_name: Task_1_finetuning
+project_name: Task_1
 task: probing
 epochs: 300
 

@@ -1,4 +1,4 @@
-project_name: Task_1_finetuning
+project_name: Task_1
 task: eval
 epochs: 300
 
