@@ -7,7 +7,7 @@ log_dir: /scratch/project_2009050/final_proj_exp/
 
 
 data:
-  name: RetinaMultiLabelDataset
+  name: RetinaMultiLabelDatasetAug
   data_root: /scratch/project_2009050/final_project_resources
   batch_size: 256
   V: 1

@@ -178,11 +178,18 @@ def init_data(cfg, transform=base_tf, num_workers=0):
     test_csv = os.path.join(cfg.data.data_root , "offsite_test.csv")
     test_image_dir = os.path.join(cfg.data.data_root , "images", "offsite_test")
 
-    ds_cls = get_cls("dl.data", cfg.data.name)
+    ds_cls = get_cls("dl.data", "RetinaMultiLabelDataset")
 
     train_ds = ds_cls(train_csv, train_image_dir, transform)
     val_ds   = ds_cls(val_csv, val_image_dir, transform)
     test_ds  = ds_cls(test_csv, test_image_dir, transform)
+
+    if cfg.data.name == "RetinaMultiLabelDatasetAug":    
+        ds_cls = get_cls("dl.data", cfg.data.name)
+        train_ds = ds_cls(train_ds, transform=transform, V=cfg.data.V)
+        val_ds = ds_cls(val_ds, transform=transform, V=1)
+        test_ds = ds_cls(test_ds, transform=transform, V=1)
+        
 
     train_loader = DataLoader(train_ds, batch_size=cfg.data.batch_size, shuffle=True, num_workers=num_workers)
     val_loader   = DataLoader(val_ds, batch_size=cfg.data.batch_size, shuffle=False, num_workers=num_workers)
