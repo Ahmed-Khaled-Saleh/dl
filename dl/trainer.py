@@ -18,7 +18,7 @@ import wandb
 
 # %% ../nbs/04_trainer.ipynb 5
 class Trainer:
-    def __init__(self, cfg, model, loaders, criterion, optimizer, device, writer):
+    def __init__(self, cfg, model, loaders, criterion, optimizer, scheduler, early_stopper, device, writer):
         self.cfg = cfg
         self.model = model
         self.train_loader = loaders['train']
@@ -26,6 +26,8 @@ class Trainer:
         self.test_loader = loaders['test']
         self.criterion = criterion
         self.optimizer = optimizer
+        self.scheduler = scheduler
+        self.early_stopper = early_stopper
         self.device = device
         self.writer = writer
 
@@ -136,6 +138,8 @@ def fit(self: Trainer):
         self.model.train()
         train_loss = self.train()
         val_loss = self.eval_()
+        self.scheduler.step(val_loss)
+        
         
         to_log = {
             'train_loss': train_loss,
@@ -144,6 +148,9 @@ def fit(self: Trainer):
 
         train_losses.append(train_loss)
         val_losses.append(val_loss)
+        
+        if self.early_stopper.early_stop(val_loss):             
+            break
         
         self.writer.write(to_log)
 

@@ -21,7 +21,7 @@ from dl.model import init_model
 from dl.loss import init_loss
 from dl.wandb_writer import WandbWriter
 from dl.trainer import Trainer
-
+from dl.utils import EarlyStopper
 
 
 def main(cfg):
@@ -30,12 +30,14 @@ def main(cfg):
     train_loader, val_loader, test_loader = init_data(cfg)
     model = init_model(cfg)
     model.to(device)
-    criterion, optimizer = None, None
+    criterion, optimizer, scheduler, early_stopper = None, None, None, None
     
     if cfg.task in ['probing', "fine-tuning"]:
         criterion = init_loss(cfg, device=device)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr, weight_decay=0.001)
-    
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
+        early_stopper = EarlyStopper(patience=10, min_delta=0.001)
+
     writer = WandbWriter(cfg)
 
     loaders = {
@@ -44,8 +46,9 @@ def main(cfg):
         "test": test_loader
     }
 
-    trainer = Trainer(cfg, model, loaders, criterion=criterion, 
-                      optimizer=optimizer, device=device, writer=writer)
+    trainer = Trainer(cfg, model, loaders, criterion=criterion, optimizer=optimizer,
+                      scheduler=scheduler, early_stopper=early_stopper,
+                      device=device, writer=writer)
 
     model, optimizer, train_losses, val_losses = None, None, None, None
     if cfg.task in ['probing', "fine-tuning"]:
