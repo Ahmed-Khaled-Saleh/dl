@@ -23,7 +23,7 @@ export PYTHONPATH=$PYTHONPATH:/scratch/project_2009050/torchy/lib/python3.12/sit
 echo "Current PYTHONPATH: $PYTHONPATH"
 
 ts=$(date +%Y%m%d_%H%M%S)
-srun python main.py --config ../cfgs/task_1/resnet/fine-tuning.yaml --env_file ../.env --timestamp ${ts}
+srun python main.py --config ./cfgs/task_1/resnet/fine-tuning.yaml --env_file ./.env --timestamp ${ts}
 ##################################################
 ts=$(date +%Y%m%d_%H%M%S)
-srun python main.py --config ../cfgs/task_1/efficientnet/fine-tuning.yaml --env_file ../.env --timestamp ${ts}
+srun python main.py --config ./cfgs/task_1/efficientnet/fine-tuning.yaml --env_file ./.env --timestamp ${ts}

@@ -10,16 +10,10 @@ from fastcore.all import *
 from fastcore.utils import *
 
 # %% ../nbs/04_trainer.ipynb 4
-import os
 import pandas as pd
-from PIL import Image
-
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms, models
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score
+import wandb
 
 
 # %% ../nbs/04_trainer.ipynb 5
@@ -91,8 +85,6 @@ def predict(self: Trainer):
     y_true = torch.tensor(y_true).numpy()
     y_pred = torch.tensor(y_pred).numpy()
 
-    # TODO: Make sure this available in cfg
-    #self.cfg.data.label_names = ["DR", "Glaucoma", "AMD"]
     res = {}
     for i, disease in enumerate(self.cfg.data.label_names):  #compute metrics for every disease
         y_t = y_true[:, i]
@@ -128,7 +120,7 @@ def predict(self: Trainer):
 
     metrics_df = pd.DataFrame(res).T
     df_result = metrics_df.reset_index()
-
+    self.writer.write({'Test Metrics': wandb.Table(dataframe= df_result)})
     return df_result
 
 # %% ../nbs/04_trainer.ipynb 9
