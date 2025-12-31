@@ -103,6 +103,7 @@ def show_batch(dl, denormalize_tf, save_to="./batch.png", aug=False):
     plt.imshow(np_grid)
     plt.axis('off')
     plt.savefig(save_to, bbox_inches='tight')
+    plt.savefig("pdf.pdf", bbox_inches='tight')
     plt.show()
 
 # %% ../nbs/01_data.ipynb 13
@@ -155,17 +156,17 @@ image_size = 224
 aug_train_tf = v2.Compose([
     v2.Resize((image_size, image_size)), 
     
-    v2.RandomResizedCrop(image_size, scale=(0.9, 1.0), ratio=(0.95, 1.05)),
+    # v2.RandomResizedCrop(image_size, scale=(0.9, 1.0), ratio=(0.95, 1.05)),
     
     # 3. Retinal images are rotationally symmetric
-    v2.RandomHorizontalFlip(p=0.5),
-    v2.RandomVerticalFlip(p=0.5),
-    v2.RandomRotation(degrees=180), # Full rotation is safe for eyes
+    # v2.RandomHorizontalFlip(p=0.5),
+    # v2.RandomVerticalFlip(p=0.5),
+    # v2.RandomRotation(degrees=180), # Full rotation is safe for eyes
     
-    # 4. Gentle lighting variation (Remove Solarize and Blur)
-    v2.RandomApply([
-        v2.ColorJitter(brightness=0.15, contrast=0.15, saturation=0.1)
-    ], p=0.3),
+    # # 4. Gentle lighting variation (Remove Solarize and Blur)
+    # v2.RandomApply([
+    #     v2.ColorJitter(brightness=0.15, contrast=0.15, saturation=0.1)
+    # ], p=0.3),
     
     v2.ToImage(),
     v2.ToDtype(torch.float32, scale=True),

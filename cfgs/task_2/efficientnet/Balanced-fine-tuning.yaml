@@ -9,8 +9,8 @@ log_dir: /scratch/project_2009050/final_proj_exp/
 data:
   name: RetinaMultiLabelDatasetAug
   data_root: /scratch/project_2009050/final_project_resources
-  batch_size: 32
-  V: 8
+  batch_size: 64
+  V: 4
   label_names: ['DR', 'Glaucoma', 'AMD']
   img_size: 224
 
