@@ -1,4 +1,4 @@
-project_name: Task_2
+project_name: Final_Task_2
 task: fine-tuning
 epochs: 300
 
@@ -22,7 +22,7 @@ model:
 
 
 loss:
-  name: BalancedFocalLoss
+  name: BalancedLoss
   params:
     gamma: 2.0
     alpha: 0.25

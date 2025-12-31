@@ -22,7 +22,7 @@ from dl.loss import init_loss
 from dl.wandb_writer import WandbWriter
 from dl.trainer import Trainer
 from dl.utils import EarlyStopper
-
+from dl.data import get_pos_counts
 
 def main(cfg):
     
@@ -33,7 +33,10 @@ def main(cfg):
     criterion, optimizer, scheduler, early_stopper = None, None, None, None
     
     if cfg.task in ['probing', "fine-tuning"]:
-        criterion = init_loss(cfg, device=device)
+        weights = None
+        if cfg.loss.name == "BalancedLoss":
+            weights = get_pos_counts(train_loader)
+        criterion = init_loss(cfg, weights, device=device)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr, weight_decay=0.001)
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
         early_stopper = EarlyStopper(patience=10, min_delta=0.001)
@@ -87,7 +90,7 @@ if __name__ == "__main__":
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    ckpt_path = os.path.join(save_path, "ckpt_final.pt")
+    ckpt_path = os.path.join(save_path, f"ckpt_{cfg.now}.pt")
         
     if model:
         ckpt = {
@@ -99,5 +102,5 @@ if __name__ == "__main__":
         
         torch.save(ckpt, ckpt_path)
 
-    result_path = os.path.join(save_path, "results.csv")
+    result_path = os.path.join(save_path, f"results_{cfg.now}.csv")
     df_result.to_csv(result_path, index=False)

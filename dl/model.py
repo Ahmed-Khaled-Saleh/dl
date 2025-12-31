@@ -41,7 +41,7 @@ class CustomModel(nn.Module):
         else:
             raise ValueError("Unsupported backbone")
         
-        self.model = load_ckpt(self.model, ckpt)
+        self.model = load_ckpt(self.model, ckpt) if ckpt else self.model
     def forward(self, x):
         if x.ndim == 5:
             x = x.flatten(0, 1)

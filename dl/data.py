@@ -5,7 +5,7 @@
 # %% auto 0
 __all__ = ['cl_labels', 'image_size', 'base_tf', 'transform', 'denormalize_tf', 'aug_train_tf', 'aug_test_tf',
            'RetinaMultiLabelDataset', 'get_cls', 'old_show_batch', 'show_batch', 'RetinaMultiLabelDatasetAug',
-           'init_data']
+           'init_data', 'get_pos_counts']
 
 # %% ../nbs/01_data.ipynb 3
 from fastcore.utils import *
@@ -213,3 +213,18 @@ def init_data(cfg, transform=base_tf, num_workers=0):
     test_loader  = DataLoader(test_ds, batch_size=cfg.data.batch_size, shuffle=False, num_workers=num_workers)
     
     return train_loader, val_loader, test_loader
+
+# %% ../nbs/01_data.ipynb 34
+import torch
+
+def get_pos_counts(dataloader):
+    first_batch_labels = next(iter(dataloader))[1]
+    num_classes = first_batch_labels.shape[1]
+    pos_counts = torch.zeros(num_classes)
+
+    print("Calculating class frequencies...")
+    for _, labels in dataloader:
+        pos_counts += labels.sum(dim=0)
+    
+    return pos_counts
+
