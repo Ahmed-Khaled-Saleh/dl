@@ -56,7 +56,7 @@ def get_cb_weights(labels_count_list, beta=0.999):
 
 
 # %% ../nbs/03_loss.ipynb 6
-def init_loss(cfg, weights = [517, 163, 142]):
+def init_loss(cfg, weights = [517, 163, 142], device='cuda'):
     
     if cfg.loss.name == "BCEWithLogitsLoss":
         return torch.nn.BCEWithLogitsLoss()
@@ -67,5 +67,5 @@ def init_loss(cfg, weights = [517, 163, 142]):
         cfg.loss.name = "FocalLoss"
 
     loss_cls = get_cls("dl.loss", cfg.loss.name)
-    loss = loss_cls(alpha=alpha, gamma=gamma)
+    loss = loss_cls(alpha=alpha, gamma=gamma).to(device)
     return loss

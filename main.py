@@ -33,7 +33,7 @@ def main(cfg):
     criterion, optimizer = None, None
     
     if cfg.task in ['probing', "fine-tuning"]:
-        criterion = init_loss(cfg)
+        criterion = init_loss(cfg, device=device)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr, weight_decay=0.001)
     
     writer = WandbWriter(cfg)
