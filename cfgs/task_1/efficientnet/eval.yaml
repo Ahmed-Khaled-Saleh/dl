@@ -12,7 +12,7 @@ data:
   batch_size: 512
   V: 1
   label_names: ['DR', 'Glaucoma', 'AMD']
-  img_size: 256
+  img_size: 224
 
 
 model:

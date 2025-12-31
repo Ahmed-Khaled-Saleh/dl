@@ -126,45 +126,32 @@ class EfficientNetB0WithAttention(nn.Module):
     def __init__(self, num_classes=1000, num_heads=8):
         super(EfficientNetB0WithAttention, self).__init__()
         
-        # 1. Load EfficientNet_B0
-        # We take only the 'features' part to exclude the default pooling/classifier
         effnet = models.efficientnet_b0(weights=None)
         self.backbone = effnet.features 
         
-        # EfficientNet-B0 final stage outputs 1280 channels
         self.embed_dim = 1280 
         
-        # 2. Multi-Head Attention Layer
-        # Ensure embed_dim is divisible by num_heads (1280 / 8 = 160)
         self.mha = nn.MultiheadAttention(
             embed_dim=self.embed_dim, 
             num_heads=num_heads, 
             batch_first=True
         )
         
-        # 3. Normalization and Classifier
         self.ln = nn.LayerNorm(self.embed_dim)
         self.fc = nn.Linear(self.embed_dim, num_classes)
 
     def forward(self, x):
-        # x shape: (Batch, 3, 256, 256)
-        # EfficientNet features output shape: (Batch, 1280, 8, 8)
         features = self.backbone(x)
         
         b, c, h, w = features.shape
-        # Flatten spatial: (B, 1280, 64) -> Permute: (B, 64, 1280)
         features = features.view(b, c, h * w).permute(0, 2, 1)
         
-        # Apply Self-Attention
         attn_output, _ = self.mha(features, features, features)
         
-        # Residual connection + Layer Norm
         x = self.ln(attn_output + features)
         
-        # Global Average Pooling (Across the 64 spatial tokens)
         x = x.mean(dim=1) 
         
-        # Classification
         logits = self.fc(x)
         return logits
 

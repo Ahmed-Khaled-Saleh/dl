@@ -106,7 +106,7 @@ def show_batch(dl, denormalize_tf, save_to="./batch.png", aug=False):
     plt.show()
 
 # %% ../nbs/01_data.ipynb 13
-image_size = 256
+image_size = 224
 base_tf = transform = v2.Compose([
         v2.Resize((image_size, image_size)),
         v2.ToImage(),
@@ -137,28 +137,45 @@ class RetinaMultiLabelDatasetAug(Dataset):
 
 
 # %% ../nbs/01_data.ipynb 21
-image_size = 256
-aug_train_tf = v2.Compose([
-    # 1. Geometric & Color Augs (on PIL or Int Tensor)
-    v2.RandomResizedCrop(256, scale=(0.5, 1.0)),
-    v2.RandomHorizontalFlip(),
-    v2.RandomApply([v2.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8), # Dialed down from 0.8
+image_size = 224
+# aug_train_tf = v2.Compose([
+#     # 1. Geometric & Color Augs (on PIL or Int Tensor)
+#     v2.RandomResizedCrop(256, scale=(0.5, 1.0)),
+#     v2.RandomHorizontalFlip(),
+#     v2.RandomApply([v2.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8), # Dialed down from 0.8
     
-    # 2. Convert to Float Tensor (Range 0.0 to 1.0)
+#     v2.ToImage(),
+#     v2.ToDtype(torch.float32, scale=True),
+    
+#     v2.RandomApply([v2.GaussianBlur(kernel_size=5, sigma=(0.1, 2.0))], p=0.5),
+#     v2.RandomApply([v2.RandomSolarize(threshold=0.8)], p=0.1), # Higher threshold = less dark
+    
+#     v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+# ])
+aug_train_tf = v2.Compose([
+    v2.Resize((image_size, image_size)), 
+    
+    v2.RandomResizedCrop(image_size, scale=(0.9, 1.0), ratio=(0.95, 1.05)),
+    
+    # 3. Retinal images are rotationally symmetric
+    v2.RandomHorizontalFlip(p=0.5),
+    v2.RandomVerticalFlip(p=0.5),
+    v2.RandomRotation(degrees=180), # Full rotation is safe for eyes
+    
+    # 4. Gentle lighting variation (Remove Solarize and Blur)
+    v2.RandomApply([
+        v2.ColorJitter(brightness=0.15, contrast=0.15, saturation=0.1)
+    ], p=0.3),
+    
     v2.ToImage(),
     v2.ToDtype(torch.float32, scale=True),
-    
-    # 3. Float-based Augs (Range must be 0-1)
-    v2.RandomApply([v2.GaussianBlur(kernel_size=25)], p=0.5),
-    v2.RandomApply([v2.RandomSolarize(threshold=0.8)], p=0.2), # Higher threshold = less dark
-    
-    # 4. NORMALIZATION ALWAYS LAST
     v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
 aug_test_tf = v2.Compose(
             [
-                v2.Resize(image_size),
+                # v2.Resize(image_size),
+                v2.Resize(int(image_size * 1.14), interpolation=v2.InterpolationMode.BICUBIC),
                 v2.CenterCrop(image_size),
                 v2.ToImage(),
                 v2.ToDtype(torch.float32, scale=True),
@@ -186,9 +203,9 @@ def init_data(cfg, transform=base_tf, num_workers=0):
 
     if cfg.data.name == "RetinaMultiLabelDatasetAug":    
         ds_cls = get_cls("dl.data", cfg.data.name)
-        train_ds = ds_cls(train_ds, transform=transform, V=cfg.data.V)
-        val_ds = ds_cls(val_ds, transform=transform, V=1)
-        test_ds = ds_cls(test_ds, transform=transform, V=1)
+        train_ds = ds_cls(train_ds, transform=aug_train_tf, V=cfg.data.V)
+        val_ds = ds_cls(val_ds, transform=aug_test_tf, V=1)
+        test_ds = ds_cls(test_ds, transform=aug_test_tf, V=1)
         
 
     train_loader = DataLoader(train_ds, batch_size=cfg.data.batch_size, shuffle=True, num_workers=num_workers)
