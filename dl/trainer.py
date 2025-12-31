@@ -38,6 +38,10 @@ def train(self:Trainer):
     running_loss = 0.0
     for inputs, labels in self.train_loader:
         inputs, labels = inputs.to(self.device), labels.to(self.device)
+        
+        if self.cfg.V > 1:
+            B, V, C, H, W = inputs.shape
+            labels = labels.repeat_interleave(V, dim=0)
 
         self.optimizer.zero_grad()
         outputs = self.model(inputs)
