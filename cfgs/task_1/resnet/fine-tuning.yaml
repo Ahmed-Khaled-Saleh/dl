@@ -9,7 +9,7 @@ log_dir: /scratch/project_2009050/final_proj_exp/
 data:
   name: RetinaMultiLabelDataset
   data_root: /scratch/project_2009050/final_project_resources
-  batch_size: 512
+  batch_size: 256
   V: 1
   label_names: ['DR', 'Glaucoma', 'AMD']
   img_size: 256
@@ -20,6 +20,8 @@ model:
   pretrained: true
   ckpt: /scratch/project_2009050/final_project_resources/pretrained_backbone/ckpt_resnet18_ep50.pt
 
+loss:
+  name: BCEWithLogitsLoss
 
 optimizer:
   name: Adam

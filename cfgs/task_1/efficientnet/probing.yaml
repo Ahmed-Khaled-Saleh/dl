@@ -20,7 +20,9 @@ model:
   pretrained: true
   ckpt: /scratch/project_2009050/final_project_resources/pretrained_backbone/ckpt_efficientnet_ep50.pt
 
-
+loss:
+  name: BCEWithLogitsLoss
+  
 optimizer:
   name: Adam
   lr: 0.0001
