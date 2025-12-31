@@ -1,5 +1,5 @@
 project_name: Task_1
-task: eval
+task: fine-tuning
 epochs: 300
 
 root_dir: /scratch/project_2009050/
@@ -20,6 +20,12 @@ model:
   pretrained: true
   ckpt: /scratch/project_2009050/final_project_resources/pretrained_backbone/ckpt_efficientnet_ep50.pt
 
+
+loss:
+  name: BalancedFocalLoss
+  params:
+    gamma: 2.0
+    alpha: 0.25
 
 optimizer:
   name: Adam
