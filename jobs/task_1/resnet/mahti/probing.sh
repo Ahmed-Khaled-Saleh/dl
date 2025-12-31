@@ -23,6 +23,3 @@ echo "Current PYTHONPATH: $PYTHONPATH"
 
 ts=$(date +%Y%m%d_%H%M%S)
 srun python main.py --config ./cfgs/task_1/resnet/probing.yaml --env_file ./.env --timestamp ${ts}
-##################################################
-ts=$(date +%Y%m%d_%H%M%S)
-srun python main.py --config ./cfgs/task_1/efficientnet/probing.yaml --env_file ./.env --timestamp ${ts}

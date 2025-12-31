@@ -63,9 +63,12 @@ def init_model(cfg):
         return model
 
     if cfg.task == 'probing':
-        key = "fc" if cfg.model.backbone == "resnet18" else "classifier.1"
-        for param in getattr(model.model, key).parameters():
-            param.requires_grad = True
+        if cfg.model.backbone == "resnet18":
+            for param in model.model.fc.parameters():
+                param.requires_grad = True    
+        elif cfg.model.backbone == "efficientnet":
+            for param in model.model.classifier[1].parameters():
+                param.requires_grad = True
 
     elif cfg.task == 'fine-tuning':
         for param in model.parameters():
@@ -76,7 +79,7 @@ def init_model(cfg):
 
     return model
 
-# %% ../nbs/02_model.ipynb 12
+# %% ../nbs/02_model.ipynb 13
 import torch
 import torch.nn as nn
 from torchvision import models
@@ -114,7 +117,7 @@ class ResNet18WithAttention(nn.Module):
 
 
 
-# %% ../nbs/02_model.ipynb 16
+# %% ../nbs/02_model.ipynb 17
 import torch
 import torch.nn as nn
 from torchvision import models
