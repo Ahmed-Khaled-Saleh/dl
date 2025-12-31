@@ -2,8 +2,8 @@ project:
   output-dir: _docs
 
 website:
-  title: "image-retina-project"
-  site-url: "https://Ahmed-Khaled-Saleh.github.io/image-retina-project"
+  title: "dl"
+  site-url: "https://Ahmed-Khaled-Saleh.github.io/dl"
   description: "Project for DL course."
   repo-branch: main
-  repo-url: "https://github.com/Ahmed-Khaled-Saleh/image-retina-project"
+  repo-url: "https://github.com/Ahmed-Khaled-Saleh/dl"
