@@ -3,9 +3,8 @@ task: eval
 epochs: 300
 
 root_dir: /scratch/project_2009050/
-save_dir : models
-res_dir: results
-log_dir: ../logs
+log_dir: /scratch/project_2009050/final_proj_exp/
+
 
 data:
   name: RetinaMultiLabelDataset

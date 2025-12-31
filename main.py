@@ -41,7 +41,7 @@ def main(cfg):
     trainer = Trainer(cfg, model, loaders, criterion=criterion, 
                       optimizer=optimizer, device=device, writer=writer)
 
-    model, optimizer, train_losses, val_losses = [], [], [], []
+    model, optimizer, train_losses, val_losses = None, None, None, None
     if cfg.task in ['probing', "fine-tuning"]:
         model, optimizer, train_losses, val_losses = trainer.fit()
 
@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     save_path = os.path.join(cfg.root_dir, cfg.log_dir, cfg.project_name, 
                              cfg.model.name, cfg.task)
+    
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
