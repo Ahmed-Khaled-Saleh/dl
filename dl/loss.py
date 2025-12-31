@@ -56,7 +56,7 @@ def get_cb_weights(labels_count_list, beta=0.999):
 
 
 
-# %% ../nbs/03_loss.ipynb 6
+# %% ../nbs/03_loss.ipynb 8
 def init_loss(cfg, weights = [517, 163, 142], device='cuda'):
     
     if cfg.loss.name == "BCEWithLogitsLoss":
@@ -69,4 +69,5 @@ def init_loss(cfg, weights = [517, 163, 142], device='cuda'):
 
     loss_cls = get_cls("dl.loss", cfg.loss.name)
     loss = loss_cls(alpha=alpha, gamma=gamma).to(device)
+    cfg.loss.name == "BalancedFocalLoss"
     return loss
