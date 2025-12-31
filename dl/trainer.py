@@ -39,7 +39,7 @@ def train(self:Trainer):
     for inputs, labels in self.train_loader:
         inputs, labels = inputs.to(self.device), labels.to(self.device)
         
-        if self.cfg.V > 1:
+        if self.cfg.data.V > 1:
             B, V, C, H, W = inputs.shape
             labels = labels.repeat_interleave(V, dim=0)
 
