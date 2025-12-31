@@ -78,7 +78,7 @@ if __name__ == "__main__":
     model, optimizer, train_losses, val_losses, df_result = main(cfg)
 
     save_path = os.path.join(cfg.root_dir, cfg.log_dir, cfg.project_name, 
-                             cfg.model.name, cfg.task)
+                             cfg.model.backbone, cfg.task)
     
     if not os.path.exists(save_path):
         os.makedirs(save_path)
