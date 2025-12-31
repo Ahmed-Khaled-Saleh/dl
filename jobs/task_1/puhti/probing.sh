@@ -17,7 +17,6 @@ source /scratch/project_2009050/torchy/bin/activate
 # pip install git+https://github.com/Ahmed-Khaled-Saleh/MAWM.git
 cd /projappl/project_2009050/dl/
 pip install -e .
-cd ./mains
 
 export PYTHONPATH=$PYTHONPATH:/scratch/project_2009050/torchy/lib/python3.12/site-packages
 echo "Current PYTHONPATH: $PYTHONPATH"
