@@ -126,10 +126,13 @@ def predict(self: Trainer):
 # %% ../nbs/04_trainer.ipynb 9
 @patch
 def fit(self: Trainer):
+    verb = "probing" if self.cfg.task == "probing" else "fine-tuning"
+    print(f"Starting {verb} the model")
+    print("***" * 10)
     self.model.to(self.device)
     train_losses = []
     val_losses = []
-    for epoch in range(self.cfg.num_epochs):
+    for epoch in range(self.cfg.epochs):
         self.model.train()
         train_loss = self.train()
         val_loss = self.eval_()

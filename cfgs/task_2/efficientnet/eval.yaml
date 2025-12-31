@@ -1,0 +1,26 @@
+project_name: Task_1
+task: eval
+epochs: 300
+
+root_dir: /scratch/project_2009050/
+log_dir: /scratch/project_2009050/final_proj_exp/
+
+
+data:
+  name: RetinaMultiLabelDataset
+  data_root: /scratch/project_2009050/final_project_resources
+  batch_size: 512
+  V: 1
+  label_names: ['DR', 'Glaucoma', 'AMD']
+  img_size: 256
+
+
+model:
+  backbone: efficientnet
+  pretrained: true
+  ckpt: /scratch/project_2009050/final_project_resources/pretrained_backbone/ckpt_efficientnet_ep50.pt
+
+
+optimizer:
+  name: Adam
+  lr: 0.0001

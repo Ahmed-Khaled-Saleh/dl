@@ -18,6 +18,7 @@ import torch.optim as optim
 
 from dl.data import init_data
 from dl.model import init_model
+from dl.loss import init_loss
 from dl.wandb_writer import WandbWriter
 from dl.trainer import Trainer
 
@@ -32,7 +33,7 @@ def main(cfg):
     criterion, optimizer = None, None
     
     if cfg.task in ['probing', "fine-tuning"]:
-        criterion = nn.BCEWithLogitsLoss()
+        criterion = init_loss(cfg)
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr)
     
     writer = WandbWriter(cfg)
