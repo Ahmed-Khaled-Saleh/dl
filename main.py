@@ -28,8 +28,13 @@ def main(cfg):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader, val_loader, test_loader = init_data(cfg)
     model = init_model(cfg)
-    criterion = nn.BCEWithLogitsLoss()
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr)
+    model.to(device)
+    criterion, optimizer = None, None
+    
+    if cfg.task in ['probing', "fine-tuning"]:
+        criterion = nn.BCEWithLogitsLoss()
+        optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=cfg.optimizer.lr)
+    
     writer = WandbWriter(cfg)
 
     loaders = {

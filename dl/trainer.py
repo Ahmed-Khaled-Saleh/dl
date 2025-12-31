@@ -126,6 +126,7 @@ def predict(self: Trainer):
 # %% ../nbs/04_trainer.ipynb 9
 @patch
 def fit(self: Trainer):
+    self.model.to(self.device)
     train_losses = []
     val_losses = []
     for epoch in range(self.cfg.num_epochs):

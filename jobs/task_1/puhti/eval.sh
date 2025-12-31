@@ -13,8 +13,6 @@
 module --force purge
 module load pytorch
 source /scratch/project_2009050/torchy/bin/activate
-# pip uninstall -y MAWM
-# pip install git+https://github.com/Ahmed-Khaled-Saleh/MAWM.git
 cd /projappl/project_2009050/dl/
 pip install -e .
 
