@@ -104,18 +104,18 @@ def predict(self: Trainer):
         print(f"Kappa    : {kappa:.4f}")
 
         res[disease] = {
-            "accuracy": f"{acc:.4f}",
-            "precision": f"{precision:.4f}",
-            "recall": f"{recall:.4f}",
-            "f1_score": f"{f1:.4f}",
-            "cohen_kappa": f"{kappa:.4f}"
+            "accuracy": acc,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1,
+            "cohen_kappa": kappa
         }    
 
     avg_acc = accuracy_score(y_true, y_pred)
     avg_precision = precision_score(y_true, y_pred, average="macro",zero_division=0)
     avg_recall = recall_score(y_true, y_pred, average="macro",zero_division=0)
     avg_f1 = f1_score(y_true, y_pred, average="macro",zero_division=0)
-    avg_kappa = -1#cohen_kappa_score(y_true, y_pred) # TODO: Check if kappa can be averaged across multi-label
+    avg_kappa = -1.#cohen_kappa_score(y_true, y_pred) # TODO: Check if kappa can be averaged across multi-label
     res['avg'] = {"f1_score": avg_f1, "accuracy": avg_acc, "precision": avg_precision, "recall": avg_recall, "cohen_kappa": avg_kappa}
 
     metrics_df = pd.DataFrame(res).T
