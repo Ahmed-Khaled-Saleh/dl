@@ -21,6 +21,8 @@ __pycache__/
 *.zip
 # C extensions
 *.so
+*.pdf
+*.csv
 *.png
 # Distribution / packaging
 .Python
